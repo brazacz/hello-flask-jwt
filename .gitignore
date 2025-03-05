@@ -1,0 +1,29 @@
+# Source: https://github.com/github/gitignore/blob/main/Python.gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Sqlite database
+*.db
+*.sqlite
+
+# Others
+run-app.sh

@@ -1,0 +1,111 @@
+# @name testStatus200
+GET http://127.0.0.1:5000
+
+###
+
+# @name registerUserWithForm
+POST /register HTTP/1.1
+Host: 127.0.0.1:5000
+Content-Type: multipart/form-data; boundary=--f2c51f16b5
+
+----f2c51f16b5
+Content-Disposition: form-data; name="email"
+
+dana@example.com
+----f2c51f16b5
+Content-Disposition: form-data; name="first_name"
+
+Dana
+----f2c51f16b5
+Content-Disposition: form-data; name="last_name"
+
+Dana
+----f2c51f16b5
+Content-Disposition: form-data; name="password"
+
+dana
+----f2c51f16b5--
+
+
+###
+
+# @name registerUserWithCurl
+# Curl working only in command line (-F argument not supported)
+curl -i -X POST -F "email=emil@example.com" -F "first_name=Emil" -F "last_name=Emil" -F "password=emil" http://127.0.0.1:5000/register
+
+###
+
+# @name jsonLogin
+POST /login HTTP/1.1
+Host: 127.0.0.1:5000
+Content-Type: application/json
+
+{
+    "email": "dana@example.com",
+    "password": "dana"
+}
+
+###
+
+# @name formLogin
+POST /login HTTP/1.1
+Host: 127.0.0.1:5000
+Content-Type: multipart/form-data; boundary=--16b5f6e1bf
+
+----16b5f6e1bf
+Content-Disposition: form-data; name="email"
+
+emil@example.com
+----16b5f6e1bf
+Content-Disposition: form-data; name="password"
+
+emil
+----16b5f6e1bf--
+
+###
+
+# @name curlLogin
+# Curl alternative of form login working only in command line (-F argument not supported)
+curl -i -X POST -F "email=emil@example.com" -F "password=emil" http://127.0.0.1:5000/login
+
+###
+
+# @name saveToken
+# Copy token to variable (extracted from jsonLogin response)
+@jsonToken = {{jsonLogin.response.body.$.access_token}}
+@formToken = {{formLogin.response.body.$.access_token}}
+
+###
+
+# @name jsonTokenLogin
+GET /protected HTTP/1.1
+Host: 127.0.0.1:5000
+Authorization: Bearer {{jsonToken}}
+
+###
+
+# @name formTokenLogin
+GET /protected HTTP/1.1
+Host: 127.0.0.1:5000
+Authorization: Bearer {{formToken}}
+
+###
+
+# @name jsonTokenLogout
+POST /logout HTTP/1.1
+Host: 127.0.0.1:5000
+Authorization: Bearer {{jsonToken}}
+
+###
+
+# @name formTokenLogout
+POST /logout HTTP/1.1
+Host: 127.0.0.1:5000
+Authorization: Bearer {{formToken}}
+
+###
+
+# @name getForgottenPassword
+GET /retrieve_password/emil@example.com HTTP/1.1
+Host: 127.0.0.1:5000
+Content-Type: application/json
